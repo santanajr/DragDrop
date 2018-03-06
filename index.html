@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+	<link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.css">
+
+	<script src="bower_components/jquery/dist/jquery.min.js"></script>
+	<script src="bower_components/jquery-ui/jquery-ui.min.js"></script>
+	<script src="bower_components/jquery-maskmoney/dist/jquery.maskMoney.min.js"></script>
+	<script src="bower_components/jquery-validation/dist/jquery.validate.min.js"></script>
+	<script src="bower_components/jquery.maskedinput/dist/jquery.maskedinput.min.js"></script>
+	<script>
+		$(function(){
+			$("#carregando").hide();
+
+			$(document).on('keydown', function(event){
+				//console.log(event.keyCode);
+				//116 -- F5
+				if(event.keyCode == 116){
+					return false;
+				}
+			})
+
+			//Carregar uma pagina inicial
+			$("#conteudo").load('home.php');
+			var paginaatual = '';
+
+			$(".menu").on('click', function(){
+				var pagina = $(this).attr("href");
+				//console.log(pagina);
+
+				if(pagina != paginaatual){
+					paginaatual = pagina;
+					$(document).ajaxStart(function(){
+						$('#conteudo').hide();
+						$('#carregando').show();
+					});
+
+					$(document).ajaxStop(function(){
+						$('#conteudo').show();
+						$('#carregando').hide();
+					});
+
+					$("#conteudo").load(pagina);
+				}
+
+				return false;
+			})
+		})
+	</script>
+</head>
+<body>
+	
+	<nav class="navbar navbar-default">
+		<div class="container">
+			<div class="col-xs-12">
+				<ul class="nav navbar-nav">
+					<li><a href="home.php" class="menu"><i class="fa fa-home"></i> HOME</a></li>
+					<li><a href="cursos.php" class="menu"><i class="fa fa-book"></i> CURSOS</a></li>
+					<li><a href="contato.php" class="menu"><i class="fa fa-envelope"></i> CONTATO</a></li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+	
+	<div class="container">
+		<div class="col-xs-12">
+			<div id="carregando">Carregando ..... </div>
+			<div id="conteudo">
+				
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>
