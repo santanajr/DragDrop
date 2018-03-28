@@ -15,7 +15,7 @@
 
 <h3 class="page-header">Cursos</h3>
 <div class="row">
-	<div class="col-xs-10">
+	<div class="col-xs-8">
 		<div class="row">
 			<div class="col-xs-4">
 				<img src="img/img1.png" alt="" class="img-responsive curso" 
@@ -47,7 +47,7 @@
 	</div>
 
 
-	<div class="col-xs-2">
+	<div class="col-xs-4">
 	<table class="tb">
    				<thead>
   				</thead>
@@ -57,18 +57,19 @@
 			
 	</table>
 
-
+	
 	<div id="carrinho">
 			  CARRINHO DE COMPRAS 
 			  <div id="Quantidadeitens"> </div> 
             <table class="tb">
    				<thead>
     				<tr>
+   					    <th scope="col"> </th>
       					<th scope="col">Produto</th>
       					<th scope="col">valor</th>
     				</tr>
   				</thead>
-  				<tbody div id="produtoescolhido">
+  				<tbody class="produtoescolhido">
 				
 			    </tbody>
 			
@@ -79,21 +80,6 @@
 		</div>
 	</div>
 
-	<div class="col-xs-2">
-
-		<div id="carrinho1">
-			CARRINHO DE COMPRAS-1
-            <table class="tb">
-   				<thead>
-  				</thead>
-  				<tbody div id="produtoescolhido1">
-				
-				</tbody>
-				
-			</table> 
-		</div>
-	
-	</div>
 	
 </div>
 <style>
@@ -102,28 +88,19 @@
 		border: 1px solid #000;
 	}
 	
-	#carrinho1{
-		height: 70px;
-		border: 1px solid #000;
-	}
 
 </style>
 <script>
 	$(function(){
         
-		var arrayproduto = [];
-		var arrayvalores = [];
+		var arrayproduto   = [];
+		var arrayvalores   = [];
 		var arraylistatela = []; 
-		
-		$("input:apagarelemento").click(function(event)
-		{ 
-           alert("zzzzz");
-        })
-	    
+
+    
 		var linhacursocompleta   = "";
 
 		$("#carrinho").show();
-		$("#carrinho1").hide();
 
 		$(".curso").draggable({
 			revert : true,
@@ -137,9 +114,11 @@
 		});
 
 
-		$("#carrinho").droppable({
+		$("#carrinho").droppable(
+		{
 			accept : '.curso',
-			drop : function(event, ui){
+			drop : function(event, ui)
+			{
 				//alert("Curso adicionado ao carrinho");
 				//pegar o elemento solto
 				var elem = ui.draggable;
@@ -149,12 +128,16 @@
 				
 				var carrinhohtml = $("#carrinho").html();
                 var totalvalores = 0;
-           
+                linhacurso = "";
 		        
-				//var listacursohtml = $("tbody#produtoescolhido").html();
-			    linhacurso ='<tr><td> <input type="button" value="(x)" id="apagarelemento" />'+ curso +
-				            '</td><td> '+ custo +' </td></tr>';
-
+				//var listacursohtml = $("tbody#produtoescolhido").html(); 
+			    linhacurso ='<div class="linha" id="linha_' + (arraylistatela.length +1)  +'" ><tr><td>'+
+			             	'<input type="button" value="(x)" class="apagarelemento" '+
+							 'id="btapagarelemento_' +( arraylistatela.length+1)+'"/>'+ '</td>' +
+				            
+							'<td>' + curso +
+				            '</td><td> '+ custo +' </td></tr> </div>';
+                // alert(linhacurso); 
 				//alert(arraylistatela.length);
 				arraylistatela.push(linhacurso);
 				//alert(arraylistatela.length);
@@ -164,10 +147,12 @@
 				arrayproduto.push(curso);
                 arrayvalores.push(custo);
 
+				$("tbody.produtoescolhido").html( "" );
 				linhacursocompleta = "";
 				arraylistatela.forEach(function( linha ) {
 					linhacursocompleta = linhacursocompleta + linha;  //totalvalores + Number( valor ) ;
                 });
+				//alert(linhacursocompleta );
 
 				//alert(linhacursocompleta);
 
@@ -178,38 +163,66 @@
 				//alert(totalvalores);
 
 				$("#carrinho").height( $("#carrinho").height() +20  );
-				$("tbody#produtoescolhido").html( linhacursocompleta );   
-				$("#Quantidadeitens").html( arrayproduto.length + "item" );
+				$("tbody.produtoescolhido").append( linhacursocompleta );   
+				$("#Quantidadeitens").html("Quantidade :" + arrayproduto.length  );
 				$("#totalvalorescarrinho").html("<tr><td>Total : </td><td>"+ totalvalores.toFixed(2) + "</td></tr>" );
 				//alert("Curso " + curso + ", adicionado ao carrinho!");
+				//var allListElements = $( "tbody#produtoescolhido" );
+  		        //alert(allListElements);
+ 			  
+			    $(".apagarelemento").click(  function ()
+			  //$("tbody.produtoescolhido").on("click", '.apagarelemento', function () 
+			  //{
+		  	  // $("tbody#produtoescolhido").find(".apagarelemento") .click(function(event)
+				{ 
+                    
+					
+					//alert("zzzzz");
+					alert(this.id);
+				//	alert( this.id.indexOf("_")  );
+					alert( this.id.substr( this.id.indexOf("_") + 1 , this.id.length - this.id.indexOf("_")  )  );
+                    var totalvalores = 0;
+					var quantidade = 0;
+					var nomediv       = this.id;
+					var posseparador  = this.id.indexOf("_");
+					var idposicaorray = 
+					  this.id.substr( this.id.indexOf("_") + 1 , this.id.length - this.id.indexOf("_")  ); 
+					//var quantidade = 0;
+					alert(idposicaorray);
+					
+					
+					arraylistatela[Number( idposicaorray)-1] = "";
+					arrayproduto[Number( idposicaorray)-1]  = ""; //splice( Number( idposicaorray)-1,1 );
+                    arrayvalores[Number( idposicaorray)-1]   = "0";
+					
+					$(this).remove();
+					$('#linha_'+idposicaorray ).remove();
+                          
+					
+					totalvalores = 0;
+					arrayvalores.forEach(function(valor) 
+					{
+					  totalvalores = totalvalores + Number( valor ) ;
+					  if ( Number( valor ) > 0 )
+					    {
+							quantidade = quantidade + 1;
+						}
+					});
+
+					$("#totalvalorescarrinho").html("");
+					$("#totalvalorescarrinho").html("<tr><td>Total : </td><td>"+totalvalores.toFixed(2)+"</td></tr>" );
+					$("#Quantidadeitens").html("");
+					$("#Quantidadeitens").html("Quantidade : "+ quantidade  );
+					$("#carrinho").height( $("#carrinho").height() - 20  );
+
+                    //alert("excluir");
+                })  
+
+
+
 			}
 		})
 		
-		$("#carrinho1").droppable({
-			accept : '.curso',
-			drop : function(event, ui){
-				//alert("Curso adicionado ao carrinho");
-				//pegar o elemento solto
-				var elem = ui.draggable;
-				var curso = elem.attr("data-image");
-				var carrinhohtml = $("#carrinho1").html();
-                
-				//alert(curso);
-           
-				var listacursohtml1 = $("tbody#produtoescolhido1").html();
-				var linhacurso1 ='<tr>'+
-				'<img src="'+ curso +'" class="img-responsive curso" </img>  </tr> <tr> 10,00 </tr>';
-				
-				alert(linhacurso1);
-				alert(listacursohtml1);
-
-				$("#carrinho1").height( $("#carrinho1").height() +20  );
-				$("tbody#produtoescolhido1").html(listacursohtml1 + linhacurso1 );   
-
-				//alert("Curso " + curso + ", adicionado ao carrinho!");
-			}
-		})
-
 
 
 	})
