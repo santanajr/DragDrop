@@ -1,0 +1,2 @@
+<?php sleep(2); ?>
+<h3 class="page-header">Pagina Inicial</h3>
