@@ -1,0 +1,198 @@
+<head>
+<meta charset="UTF-8">
+	<title>Document</title>
+	<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+	<link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.css">
+
+	<script src="bower_components/jquery/dist/jquery.min.js"></script>
+	<script src="bower_components/jquery-ui/jquery-ui.min.js"></script>
+	<script src="bower_components/jquery-maskmoney/dist/jquery.maskMoney.min.js"></script>
+	<script src="bower_components/jquery-validation/dist/jquery.validate.min.js"></script>
+	<script src="bower_components/jquery.maskedinput/dist/jquery.maskedinput.min.js"></script>
+
+</head>
+<h3 class="page-header">
+	<div class="row">
+		<div class="col-xs-12" id="placar">
+			DragDrop - Placar
+		</div>
+	</div>
+</h3>
+
+<div class="row">
+		<div class="col-xs-6" id="opcao">
+		</div>
+		
+		<div class="col-xs-6" id="resposta">
+		</div>
+</div>
+
+<style>
+	.figuraresposta{
+		height: 120px;
+		weight: 100px; 
+	    border: 5px solid red;
+	}
+
+	.img-responsive-opc1, .img-responsive-opc2, .img-responsive-opc3
+	{
+		height: 80px;
+		border: 0px solid #000;
+	}
+	
+
+</style>
+<script>
+	$(function(){
+        
+		var arrayopcao  = ["img/img1.png", "img/img3.jpg" , "img/img2.gif" ];
+		var arrayrespgabarito   = ["opc1" , "opc2" , "opc3"];
+
+		var arraynomefigura = ["bootstrap", "css", "jquery"];
+
+		var htmlopcao   = "";
+		var cont        = 0;
+		var htmlresp    = "";
+		var i = 0;
+		var indice = 0;
+		var voltarfigura = false;
+		var revertendo = true;
+        var idretorno =""; 
+
+		var intrandomico = Math.floor(Math.random() * (3 -1 + 1)) + 1;
+        var idselecionado = "";  
+
+		//alert(intrandomico.toString() );
+		var listarevert = '';
+
+		var erros = 0;
+		var acertos = 0;
+
+		var largounolugarcerto = false;
+
+		arrayopcao.forEach(function(valor) 
+					{
+						cont = cont + 1;
+						htmlopcao = htmlopcao + '<div class="row">'+
+						            '<div class="col-xs-3">'+
+							        '<img src="'+valor+' " alt="" class="img-responsive-opc1" data-image=" ' + valor + 
+									                                      ' "  id="opc' + cont.toString()  +'">'+
+						            '</div>'+
+									'</div>';	
+						//if ( intrandomico == cont )
+						//{
+                        //   listarevert = '$("#opc"'+ intrandomico.toString() +').draggable({revert : false});' 
+						//}
+						//else
+						//{
+						//	listarevert = '$("#opc"'+ cont.toString() +').draggable({revert : true});' 
+						//	
+						//}					
+
+					    //htmlresp = htmlresp + '<div class="row">'+
+						//            '<div class="col-xs-3">'+
+						//	        '<img src="'+valor+' " alt="" class="img-responsive-opc2" data-image=" ' + valor + 
+						//			   ' "  id="respimg' + cont.toString()  +'">'+
+						//            '</div>';  
+									
+					});
+
+
+					htmlresp = htmlresp + '<div class="col-xs-3">'+
+					                      '<p class="figuraresposta" id="resposta">coloque a figura ' + 
+											intrandomico.toString() + arraynomefigura[intrandomico-1] +' aqui </p>'+
+									'</div>' + '</div>';	
+						
+
+		//alert(htmlopcao);			
+		$("#placar").empty();
+  	    $("#placar").append("Drag Drop - Placar Acertos " + acertos.toString() + "x Erros "+ erros.toString()  );
+
+
+		$("#opcao").append(htmlopcao );
+		$("#resposta").append(htmlresp);
+
+		$(".figuraresposta").show();
+		$(".img-responsive-opc1").show();
+
+		$(".img-responsive-opc1").draggable(
+			{
+		      revert : function(){
+                
+				if (largounolugarcerto)
+				{
+					if ( (idselecionado == "opc" + intrandomico.toString()) )
+	  				{
+						acertos = acertos +1;
+						alert("Acertos :" + acertos.toString());
+		             			
+
+					}
+					else
+					{
+						erros = erros + 1;
+						alert ("Erros :" + erros.toString())
+					
+					}
+                
+					var randomico = Math.floor(Math.random() * (3 -1 + 1)) + 1;
+					while (intrandomico == randomico )
+					{
+						randomico = Math.floor(Math.random() * (3 -1 + 1)) + 1;
+					}
+					intrandomico = randomico;
+
+
+					htmlresp = '<div class="col-xs-3">'+
+					       '<p class="figuraresposta" id="resposta">coloque a figura ' + 
+						   intrandomico.toString() + arraynomefigura[intrandomico-1] +' aqui </p>'+
+							'</div>';	
+					$("#resposta").empty();
+					$("#resposta").append(htmlresp);
+				
+					$("#placar").empty();
+					$("#placar").append("Drag Drop - Placar Acertos " + acertos.toString() + "x Erros "+ erros.toString()  );
+
+
+     			} 
+
+				return true;
+
+
+				//return false;
+
+			}
+			
+			,
+			cursor : 'pointer',
+			start  : function()  
+			    { 
+	        	  $(".figuraresposta").show(); 
+                  
+                   idselecionado = this.id; 
+				   largounolugarcerto = false;
+				},
+			stop : function(event , ui  ) 
+			{ 
+				//alert("stop");
+			}
+		});
+
+
+		$(".figuraresposta").droppable(
+		{
+			accept : ".img-responsive-opc1",
+			
+			
+			drop : function(event, ui)
+			{
+				largounolugarcerto = true;
+
+				//alert("drop");
+			}
+		})
+		
+
+
+	})
+</script>
